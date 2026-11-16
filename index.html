@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fffdf9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Candy Shop">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%93%3C/text%3E%3C/svg%3E">
+<title>Candy Shop - Hồ sơ dâu tây (Fantastic Cats Style)</title>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f8fcf7;
+  --card:#ffffff;
+  --ink:#4a2533;
+  --muted:#7c6e75;
+  --line:#ffd6db;
+  --brand:#e5233d;
+  --brand-dark:#b3122b;
+  --soft:#ffe3e6;
+  --accent:#ff6b7d;
+  --green:#2f9e44;
+  --green-light:#a3b18a;
+  --orange:#e67e00;
+  --red:#d90429;
+  --shadow:0 6px 24px rgba(229,35,61,.08);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  background-image: radial-gradient(#d8e2dc 1.2px, transparent 1.2px), radial-gradient(#b7b7a4 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: 0 0, 14px 14px;
+  color:var(--ink);
+  font-size:15px;
+  line-height:1.45;
+}
+/* Dải cỏ ở đáy: nằm DƯỚI mọi nội dung (không đè lên toast / hộp thoại) */
+body::before {
+  content: "";
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 22px;
+  background: repeating-linear-gradient(45deg, #588157, #588157 10px, #3a5a40 10px, #3a5a40 20px);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: -1;
+}
+.app{
+  max-width:620px;
+  margin:auto;
+  min-height:100svh;
+  padding:calc(14px + env(safe-area-inset-top)) 16px calc(30px + env(safe-area-inset-bottom));
+}
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:4px 0 16px;
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{
+  width:46px;
+  height:46px;
+  flex:none;
+  border-radius:16px;
+  background:linear-gradient(135deg,#ff5a6e,#d6112d);
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-size:24px;
+  box-shadow:0 4px 12px rgba(229,35,61,.28);
+  border:2px solid var(--ink);
+}
+.eyebrow{font-size:11px;color:var(--brand);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.heading{font-size:23px;font-weight:800;letter-spacing:-.5px;color:var(--ink)}
+.btn{
+  border:2px solid var(--ink);
+  border-radius:14px;
+  min-height:44px;
+  padding:0 16px;
+  font-family:inherit;font-size:14px;font-weight:700;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  transition:transform .1s, background .15s;
+  box-shadow:2px 3px 0 var(--ink);
+}
+.btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+.primary{
+  background:linear-gradient(135deg,#ff4d63,#d6112d);
+  color:#fff;
+}
+.plain{background:#fff;color:var(--ink)}
+.danger{color:var(--red);background:#fff0f3}
+
+/* Tabs Navigation */
+.nav-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  background:#fff0f1;
+  padding:6px;
+  border-radius:16px;
+  border:2px solid var(--line);
+  margin-bottom:16px;
+}
+.tab-btn{
+  border:2px solid transparent;
+  background:transparent;
+  color:var(--muted);
+  font-family:inherit;font-size:14px;font-weight:700;
+  padding:10px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:all .2s;
+}
+.tab-btn.active{
+  background:#fff;
+  color:var(--brand);
+  border-color:var(--ink);
+  box-shadow:2px 2px 0 var(--ink);
+}
+
+.search{position:relative;margin-bottom:14px}
+.search input{padding-left:43px}
+.search span{position:absolute;left:15px;top:11px;color:var(--muted);font-size:18px}
+input,textarea{
+  width:100%;
+  min-height:46px;
+  border:2px solid var(--ink);
+  border-radius:14px;
+  background:#fff;
+  padding:11px 13px;
+  color:var(--ink);
+  font-family:inherit;font-size:16px;
+  outline:none;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.03);
+  -webkit-appearance:none;
+  appearance:none;
+}
+textarea{min-height:100px;resize:vertical}
+input:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(229,35,61,.2)}
+label{display:block;font-size:12px;font-weight:800;color:var(--ink);margin:0 0 6px}
+
+/* Stats Grid */
+.stats-home{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+  margin:14px 0;
+}
+.stats-finance{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+  margin:10px 0 18px;
+}
+.stat{
+  background:var(--card);
+  border:2px solid var(--ink);
+  border-radius:16px;
+  padding:13px 12px;
+  box-shadow:2px 3px 0 var(--ink);
+  min-width:0;
+}
+.stat b{display:block;font-size:17px;letter-spacing:-.4px;color:var(--ink);overflow-wrap:anywhere}
+.stat span{font-size:11.5px;color:var(--muted);font-weight:600}
+/* Dâu tây: đỏ tươi */
+.stat.red,.stat.highlight{background:linear-gradient(135deg,#fff3f4,#ffd9de)}
+.stat.red b,.stat.red .ic,.stat.highlight b,.stat.highlight .ic{color:var(--brand)}
+/* Lượt ghé: xanh lá */
+.stat.green{background:linear-gradient(135deg,#f3fcf4,#d3f0d8)}
+.stat.green b,.stat.green .ic{color:var(--green)}
+/* Bánh quy: vàng cam */
+.stat.orange{background:linear-gradient(135deg,#fff9e8,#ffe2a0)}
+.stat.orange b,.stat.orange .ic{color:var(--orange)}
+
+.section-title{font-size:14px;font-weight:800;margin:18px 2px 9px;display:flex;justify-content:space-between;align-items:center;color:var(--ink)}
+.count{font-size:12px;color:var(--muted);font-weight:600}
+.list{display:grid;gap:9px}
+.patient{
+  background:#fff;
+  border:2px solid var(--ink);
+  border-radius:16px;
+  padding:13px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  box-shadow:2px 3px 0 var(--ink);
+  cursor:pointer;
+  transition: transform .1s;
+}
+.patient:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
+.avatar{
+  width:48px;
+  height:48px;
+  flex:none;
+  border-radius:14px;
+  background:#fceade;
+  border:2px solid var(--ink);
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  font-size:24px;
+  overflow:hidden;
+}
+.pinfo{min-width:0;flex:1}
+.pname{font-weight:800;overflow-wrap:anywhere;color:var(--ink)}
+.pmeta{font-size:12px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
+.pprice{font-size:12.5px;font-weight:800;white-space:nowrap;text-align:right;color:var(--brand)}
+.arrow{color:var(--ink);font-size:20px}
+.empty{background:#fff;border:2px dashed var(--ink);border-radius:16px;text-align:center;padding:28px 16px;color:var(--muted)}
+.empty b{display:block;color:var(--ink);margin-bottom:4px}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.toolbar .btn{font-size:12px;min-height:38px;padding:0 11px}
+.notice{font-size:11px;color:var(--muted);line-height:1.5;margin:15px 3px}
+.view[hidden]{display:none!important}
+.backline{display:flex;align-items:center;gap:10px;margin:2px 0 18px}
+.backbtn{display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:5px 16px 5px 5px;border-radius:999px;border:2px solid var(--ink);background:#fff;color:var(--brand);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;box-shadow:2px 3px 0 var(--ink)}
+.backbtn-ic{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;background:var(--brand);border:2px solid var(--ink)}
+.viewtitle{font-size:20px;font-weight:800;letter-spacing:-.3px}
+.formcard,.detailcard{background:#fff;border:2px solid var(--ink);border-radius:18px;padding:16px;box-shadow:3px 4px 0 var(--ink)}
+.formgrid{display:grid;gap:13px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{min-width:0}
+#identityFields{display:grid;gap:13px}
+#visitFields{display:grid;gap:13px}
+.form-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
+.form-actions .primary{grid-column:1/-1}
+.hint{font-size:11px;color:var(--muted);margin-top:5px}
+
+.detail-head{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:2px solid var(--line)}
+.detail-head .avatar{width:54px;height:54px}
+.detail-name{font-size:19px;font-weight:800;overflow-wrap:anywhere}
+.detail-sub{font-size:12px;color:var(--muted)}
+.detailgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.dfield{padding:13px 0;border-bottom:2px solid var(--line);min-width:0}
+.dfield.wide{grid-column:1/-1}
+.dlabel{font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:700}
+.dvalue{font-size:14px;font-weight:700;white-space:pre-wrap;overflow-wrap:anywhere}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.actions .btn{width:100%}
+.toast{
+  position:fixed;
+  left:16px;
+  right:16px;
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  max-width:588px;
+  margin:auto;
+  background:var(--ink);
+  color:white;
+  padding:12px 15px;
+  border-radius:14px;
+  font-size:13px;
+  box-shadow:0 8px 25px rgba(74,37,51,.25);
+  z-index:100;
+  border:2px solid #fff;
+  display:flex;align-items:center;gap:12px;
+}
+.hidden{display:none!important}
+.history{margin-top:18px}
+.visit{border:2px solid var(--ink);border-radius:14px;padding:12px;margin-top:9px;background:#fffaf6}
+.visit-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.visit-date{font-weight:800;font-size:14px}
+.visit-cost{font-weight:800;color:var(--brand);white-space:nowrap;font-size:13px}
+.visit-biscuit{font-size:12px;font-weight:700;color:var(--orange);margin-top:3px}
+.visit-dx{font-weight:800;margin-top:7px;color:var(--ink);overflow-wrap:anywhere}
+.visit-tx{font-size:13px;color:var(--muted);white-space:pre-wrap;margin-top:4px;overflow-wrap:anywhere}
+.visit-tools{display:flex;gap:7px;margin-top:10px}
+.visit-tools .btn{min-height:34px;padding:0 10px;font-size:12px}
+.profile-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.profile-actions .btn{width:100%}
+.toast span{flex:1}
+.toast button{flex:none;border:2px solid #fff;border-radius:10px;padding:7px 12px;background:rgba(255,255,255,.2);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+/* Banner: đỏ dâu tây */
+.banner{
+  display:flex;align-items:center;gap:9px;
+  background:linear-gradient(135deg,#ff5a6e,#d6112d);
+  border:2px solid var(--ink);color:#fff;
+  border-radius:14px;padding:10px 13px;
+  font-size:12.5px;font-weight:700;margin-bottom:12px;cursor:pointer;
+  box-shadow:2px 2px 0 var(--ink);
+}
+.banner .ic{width:1.3em;height:1.3em}
+.overlay{position:fixed;inset:0;z-index:40;background:rgba(74,37,51,.6);display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.sheet{background:#fff;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:20px;padding:20px 20px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:580px;max-height:90vh;max-height:90dvh;overflow:auto}
+.sheet h3{margin:0 0 8px;font-size:19px;font-weight:800}
+.sheet p,.sheet li{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 6px}
+.sheet ol{margin:6px 0 6px;padding-left:20px}
+.sheet .btn{width:100%;margin-top:8px}
+.sheet .field{margin-top:10px}
+.err{color:var(--red);font-size:12.5px;font-weight:700;min-height:18px;margin-top:6px}
+#lock{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}
+.lockbox{width:100%;max-width:340px;text-align:center;background:#fff;padding:24px;border:2px solid var(--ink);border-radius:20px;box-shadow:4px 4px 0 var(--ink)}
+.ic{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.25em;flex:none}
+.logo .ic{width:26px;height:26px;vertical-align:0}
+.search span{top:13px;line-height:0}.search span .ic{width:19px;height:19px;vertical-align:0}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-candy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M8.3 10 4 7.5v9l4.3-2.5M15.7 10 20 7.5v9l-4.3-2.5"/></symbol>
+  <symbol id="i-cookie" viewBox="0 0 24 24"><path d="M20.6 13A8.6 8.6 0 1 1 11 3.4a3.2 3.2 0 0 0 3.6 3.6 3 3 0 0 0 3.4 3.4 3.2 3.2 0 0 0 2.6 2.6z"/><path d="M8.5 9v.01M9 15v.01M13 13v.01M15.5 17v.01"/></symbol>
+  <symbol id="i-strawberry" viewBox="0 0 24 24"><path d="M12 20.5c-3.6-1.9-6-5-6-8 0-2.7 2.2-4 6-4s6 1.3 6 4c0 3-2.4 6.1-6 8z"/><path d="M12 8.5c-1.9 0-3.3-.9-4.2-2.3 1.7-.2 3 .2 4.2 1.2 1.2-1 2.5-1.4 4.2-1.2-.9 1.4-2.3 2.3-4.2 2.3zM12 6.2V4M9.5 12v.01M14.5 12v.01M12 15v.01"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 12h-11z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m20 20-4.2-4.2"/></symbol>
+  <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"/><path d="m14.5 6.5 3 3"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9.5 7V5h5v2M6.5 7l1 13h9l1-13M10 11v5M14 11v5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M5 20h14"/></symbol>
+  <symbol id="i-archive" viewBox="0 0 24 24"><path d="M4 7h16v3H4zM5.5 10v9h13v-9M10 14h4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4 3 19.5h18z"/><path d="M12 10v4M12 17v.01"/></symbol>
+</svg>
+
+<div id="lock" class="hidden" role="dialog" aria-modal="true" aria-label="Khóa ứng dụng">
+  <div class="lockbox">
+    <div class="logo" style="margin:0 auto 14px"><svg class="ic" aria-hidden="true"><use href="#i-strawberry"/></svg></div>
+    <div class="heading" style="margin-bottom:4px">Candy Shop đang khóa</div>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 14px">Nhập mã PIN để mở khóa</p>
+    <input id="lockPin" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Mã PIN" style="text-align:center;letter-spacing:.3em">
+    <div class="err" id="lockErr"></div>
+    <button class="btn primary" id="lockBtn" type="button" style="width:100%;margin-top:6px">Mở khóa</button>
+  </div>
+</div>
+
+<main class="app">
+<section id="home" class="view">
+  <header>
+    <div class="brand">
+      <div class="logo"><svg class="ic" aria-hidden="true"><use href="#i-strawberry"/></svg></div>
+      <div>
+        <div class="eyebrow">Fantastic Healing Game</div>
+        <div class="heading">Quầy Dâu Tây</div>
+      </div>
+    </div>
+    <button class="btn primary" id="add" type="button"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg> Thêm mới</button>
+  </header>
+
+  <div id="backupBanner" class="banner hidden" role="button" tabindex="0"></div>
+  <div id="a2hsBanner" class="banner hidden" role="button" tabindex="0"></div>
+  <nav class="nav-tabs" role="tablist">
+    <button class="tab-btn active" id="tabBtnShop" type="button" role="tab" aria-selected="true" aria-controls="tabShop"><svg class="ic" aria-hidden="true"><use href="#i-strawberry"/></svg> Quầy Dâu Tây</button>
+    <button class="tab-btn" id="tabBtnVault" type="button" role="tab" aria-selected="false" aria-controls="tabVault"><svg class="ic" aria-hidden="true"><use href="#i-cookie"/></svg> Hũ Kẹo & Bánh</button>
+  </nav>
+
+  <div id="tabShop" role="tabpanel" aria-labelledby="tabBtnShop">
+    <div class="search">
+      <span><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg></span>
+      <input id="search" type="search" placeholder="Tìm tên dâu tây, SĐT, nội dung…" autocomplete="off">
+    </div>
+
+    <div class="stats-home">
+      <div class="stat red">
+        <b id="total">0</b>
+        <span><svg class="ic" aria-hidden="true"><use href="#i-strawberry"/></svg> Dâu tây</span>
+      </div>
+      <div class="stat green">
+        <b id="monthVisits">0</b>
+        <span><svg class="ic" aria-hidden="true"><use href="#i-bag"/></svg> Lượt ghé tháng</span>
+      </div>
+      <div class="stat orange">
+        <b id="monthProfitHome">0 <svg class="ic" aria-hidden="true"><use href="#i-cookie"/></svg></b>
+        <span>Bánh quy tháng</span>
+      </div>
+    </div>
+
+    <div class="section-title">Danh sách dâu tây <span class="count" id="shown"></span></div>
+    <div id="list" class="list"></div>
+  </div>
+
+  <div id="tabVault" class="hidden" role="tabpanel" aria-labelledby="tabBtnVault">
+    <div class="section-title" style="margin-top:4px">Thống kê doanh thu Kẹo</div>
+    <div class="stats-finance">
+      <div class="stat red">
+        <b id="monthMoney">0 <svg class="ic" aria-hidden="true"><use href="#i-candy"/></svg></b>
+        <span>Tổng Kẹo tháng này</span>
+      </div>
+      <div class="stat">
+        <b id="yearMoney">0 <svg class="ic" aria-hidden="true"><use href="#i-candy"/></svg></b>
+        <span>Tổng Kẹo năm nay</span>
+      </div>
+    </div>
+    <div class="stats-finance" style="grid-template-columns:1fr">
+      <div class="stat">
+        <b id="allMoney">0 <svg class="ic" aria-hidden="true"><use href="#i-candy"/></svg></b>
+        <span>Tổng Kẹo toàn thời gian</span>
+      </div>
+    </div>
+
+    <div class="section-title">Thống kê lợi nhuận Bánh quy</div>
+    <div class="stats-finance">
+      <div class="stat orange">
+        <b id="monthProfit">0 <svg class="ic" aria-hidden="true"><use href="#i-cookie"/></svg></b>
+        <span>Bánh quy tháng này</span>
+      </div>
+      <div class="stat">
+        <b id="yearProfit">0 <svg class="ic" aria-hidden="true"><use href="#i-cookie"/></svg></b>
+        <span>Bánh quy năm nay</span>
+      </div>
+    </div>
+    <div class="stats-finance" style="grid-template-columns:1fr">
+      <div class="stat">
+        <b id="allProfit">0 <svg class="ic" aria-hidden="true"><use href="#i-cookie"/></svg></b>
+        <span>Tổng Bánh quy</span>
+      </div>
+    </div>
+
+    <div class="section-title">Công cụ & Bảo mật</div>
+    <div class="toolbar" style="margin-top:8px">
+      <button class="btn plain" id="csv" type="button"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg> Xuất Excel (CSV)</button>
+      <button class="btn plain" id="backup" type="button"><svg class="ic" aria-hidden="true"><use href="#i-archive"/></svg> Sao lưu</button>
+      <button class="btn plain" id="restore" type="button"><svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg> Khôi phục</button>
+      <button class="btn plain" id="setPinBtn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg> Đặt PIN</button>
+      <button class="btn plain hidden" id="lockNow" type="button"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg> Khóa ngay</button>
+      <button class="btn plain hidden" id="undoRestore" type="button"><svg class="ic" aria-hidden="true"><use href="#i-undo"/></svg> Hoàn tác</button>
+      <input id="file" class="hidden" type="file" accept=".json,application/json">
+    </div>
+    <p class="notice" id="backupInfo" style="margin-bottom:0"></p>
+    <p class="notice">Dữ liệu lưu trực tiếp trên thiết bị của bạn theo phong cách game chữa lành. Mã PIN chỉ khóa giao diện ứng dụng, dữ liệu trong bộ nhớ máy không được mã hóa — hãy dùng thêm mật khẩu/Face ID của điện thoại.</p>
+  </div>
+</section>
+
+<section id="editor" class="view" hidden>
+  <div class="backline">
+    <button type="button" class="backbtn" id="cancel" aria-label="Quay lại"><span class="backbtn-ic"><svg class="ic" aria-hidden="true"><use href="#i-chev-l"/></svg></span><span>Quay lại</span></button>
+    <div class="viewtitle" id="formTitle">Thêm dâu tây</div>
+  </div>
+  <div class="formcard">
+    <form id="patientForm" class="formgrid" novalidate>
+      <div id="identityFields">
+        <div class="field"><label for="name">TÊN DÂU TÂY *</label><input id="name" required maxlength="120" placeholder="Nguyễn Văn An" autocomplete="off"></div>
+        <div class="grid2">
+          <div class="field"><label for="age">TUỔI</label><input id="age" type="number" min="0" max="130" step="1" inputmode="numeric" placeholder="25"></div>
+          <div class="field"><label for="phone">SỐ ĐIỆN THOẠI</label><input id="phone" type="tel" inputmode="tel" placeholder="09xx xxx xxx" autocomplete="off"></div>
+        </div>
+        <div class="field"><label for="address">ĐỊA CHỈ</label><input id="address" maxlength="250" placeholder="Phường/xã, tỉnh/thành phố"></div>
+      </div>
+
+      <div id="visitFields">
+        <div class="section-title" style="margin:5px 0 0">Thông tin lượt ghé shop</div>
+        <div class="field"><label for="diagnosis">NỘI DUNG / YÊU CẦU *</label><input id="diagnosis" required maxlength="250" placeholder="Nhập nội dung ghé shop"></div>
+        <div class="field"><label for="treatment">CHI TIẾT / GHI CHÚ</label><textarea id="treatment" maxlength="5000" placeholder="Chi tiết dịch vụ, loại kẹo, dặn dò…"></textarea></div>
+        <div class="field"><label for="date">NGÀY GHÉ SHOP</label><input id="date" type="date"></div>
+        <div class="grid2">
+          <div class="field"><label for="cost">KẸO (<svg class="ic" aria-hidden="true"><use href="#i-candy"/></svg>)</label><input id="cost" type="text" inputmode="numeric" autocomplete="off" placeholder="500.000"></div>
+          <div class="field"><label for="profit">BÁNH QUY (<svg class="ic" aria-hidden="true"><use href="#i-cookie"/></svg>)</label><input id="profit" type="text" inputmode="numeric" autocomplete="off" placeholder="Nhập số Bánh quy"></div>
+        </div>
+      </div>
+      <div class="hint">* Bắt buộc nhập tên dâu tây và nội dung ghé shop.</div>
+      <div class="form-actions">
+        <button type="submit" class="btn primary" id="saveButton">Lưu hồ sơ</button>
+        <button type="button" class="btn plain" id="discard">Hủy</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section id="detail" class="view" hidden>
+  <div class="backline">
+    <button type="button" class="backbtn" id="detailBack" aria-label="Quay lại"><span class="backbtn-ic"><svg class="ic" aria-hidden="true"><use href="#i-chev-l"/></svg></span><span>Quay lại</span></button>
+    <div class="viewtitle">Hồ sơ dâu tây</div>
+  </div>
+  <div class="detailcard" id="detailContent"></div>
+</section>
+</main>
+
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+<script>
+(()=>{'use strict';
+const KEY='candy.shop.records.v3', LEGACY_KEYS=['candy.shop.records.catgame','clinic.patient.records.v3','clinic.patient.records.v2','hosobn.v1'], PIN_KEY='candy.shop.pin', FAIL_KEY='candy.shop.pinfail', LAST_BK='candy.shop.lastBackup', PREV_KEY='candy.shop.pre-restore', A2HS_KEY='candy.shop.a2hsDismissed', CORRUPT_KEY='candy.shop.corrupt';
+let patients=[],editingPatientId=null,editingVisitId=null,formMode='new',activeId=null,toastTimer,searchTimer;
+let view='home',pushed=false,ignorePop=0,formSig='',skipLock=0;
+const $=id=>document.getElementById(id);
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const isDate=s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&!isNaN(new Date(s+'T00:00:00'));
+const num=n=>Math.round(Number(n)||0).toLocaleString('vi-VN');
+const ic=n=>`<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const candy=n=>`${num(n)} ${ic('candy')}`;
+const biscuit=n=>`${num(n)} ${ic('cookie')}`;
+const dateFmt=s=>{if(!s)return 'Chưa nhập';const d=new Date(s+'T00:00:00');return isNaN(d)?'Chưa nhập':d.toLocaleDateString('vi-VN')};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v);return true}catch(e){return false}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+const fold=s=>String(s??'').toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');
+const digitsOf=s=>String(s??'').replace(/\D/g,'');
+const parseMoney=s=>{const d=digitsOf(s).slice(0,12);return d?Number(d):0};
+const dots=d=>d.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const fmtMoney=n=>{const v=Math.max(0,Math.round(Number(n)||0));return v?dots(String(v)):''};
+const cmpVisit=(a,b)=>(b.date||'').localeCompare(a.date||'')||String(b.id||'').localeCompare(String(a.id||''));
+const hash32=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)};
+const rid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+
+function matchPatient(p,q,qd){
+  const hay=fold([p.name,p.phone,p.address,...(p.visits||[]).flatMap(v=>[v.diagnosis,v.treatment])].join(' '));
+  return hay.includes(q)||(qd.length>=3&&digitsOf(p.phone).includes(qd));
+}
+
+// Avatar mèo: chỉ dùng emoji (không gọi mạng, chạy offline)
+const catAvatars=['🐱','😺','😸','😻','🐈','🐈‍⬛','😼','🐾'];
+function getCatAvatar(id){
+  const idx=Math.abs(String(id).split('').reduce((acc,ch)=>acc+ch.charCodeAt(0),0))%catAvatars.length;
+  return catAvatars[idx];
+}
+
+function notify(msg,action,ms){
+  const t=$('toast');t.textContent='';
+  const sp=document.createElement('span');sp.textContent=msg;t.appendChild(sp);
+  if(action){const b=document.createElement('button');b.type='button';b.textContent=action.label;b.onclick=()=>{t.classList.add('hidden');action.fn()};t.appendChild(b)}
+  t.classList.remove('hidden');clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.add('hidden'),ms||(action?7000:2500));
+}
+
+function openModal(html){
+  const el=document.createElement('div');el.className='overlay';
+  el.innerHTML=`<div class="sheet" role="dialog" aria-modal="true">${html}</div>`;
+  document.body.appendChild(el);
+  const m={el,close:()=>el.remove()};
+  el.addEventListener('click',e=>{if(e.target===el)m.close()});
+  return m;
+}
+
+async function copyText(s){
+  try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(s);return true}}catch(e){}
+  try{
+    const ta=document.createElement('textarea');ta.value=s;ta.setAttribute('readonly','');
+    ta.style.cssText='position:fixed;top:0;left:0;opacity:0;font-size:16px';
+    document.body.appendChild(ta);ta.focus();ta.select();ta.setSelectionRange(0,s.length);
+    const ok=document.execCommand('copy');ta.remove();return ok;
+  }catch(e){return false}
+}
+
+/* ---------- PIN / khóa ---------- */
+function hashPin(pin){
+  const s='cat-shop-v1:'+pin;let h1=0xdeadbeef,h2=0x41c6ce57;
+  for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}
+  return 'h1:'+(h1>>>0).toString(16).padStart(8,'0')+(h2>>>0).toString(16).padStart(8,'0');
+}
+function pinOk(input){const sv=ls.get(PIN_KEY);if(!sv)return true;return sv.startsWith('h1:')?sv===hashPin(input):sv===input}
+const getFail=()=>{try{const o=JSON.parse(ls.get(FAIL_KEY)||'{}');return {c:+o.c||0,u:+o.u||0}}catch(e){return {c:0,u:0}}};
+const setFail=(c,u)=>ls.set(FAIL_KEY,JSON.stringify({c,u}));
+function lockApp(){
+  if(!ls.get(PIN_KEY))return;
+  document.querySelectorAll('.overlay,#backupPanel').forEach(e=>e.remove());
+  $('toast').classList.add('hidden');
+  document.querySelector('.app').hidden=true;$('lock').classList.remove('hidden');$('lockPin').value='';$('lockErr').textContent='';
+  setTimeout(()=>$('lockPin').focus(),50);
+}
+function tryUnlock(){
+  const f=getFail(),wait=f.u-Date.now();
+  if(wait>0){$('lockErr').textContent=`Thử lại sau ${Math.ceil(wait/1000)} giây`;return}
+  const v=$('lockPin').value.trim();
+  if(pinOk(v)){
+    setFail(0,0);
+    const sv=ls.get(PIN_KEY);if(sv&&!sv.startsWith('h1:'))ls.set(PIN_KEY,hashPin(v));
+    $('lock').classList.add('hidden');document.querySelector('.app').hidden=false;$('lockPin').value='';
+  }else{
+    const c=f.c+1;$('lockPin').value='';
+    if(c%5===0){
+      const secs=Math.min(900,30*Math.pow(2,c/5-1));
+      setFail(c,Date.now()+secs*1000);
+      $('lockErr').textContent=`Sai quá nhiều lần. Thử lại sau ${secs} giây.`;
+    }else{setFail(c,0);$('lockErr').textContent='Mã PIN không đúng'}
+  }
+}
+$('lockBtn').onclick=tryUnlock;
+$('lockPin').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();tryUnlock()}});
+$('lockNow').onclick=lockApp;
+function refreshPinUI(){const has=!!ls.get(PIN_KEY);$('lockNow').classList.toggle('hidden',!has);$('setPinBtn').innerHTML=ic('lock')+(has?' Đổi / gỡ PIN':' Đặt PIN')}
+// Tự khóa khi app chuyển nền (trừ lúc đang mở hộp chia sẻ / chọn file)
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'&&ls.get(PIN_KEY)&&Date.now()>skipLock)lockApp();
+});
+lockApp();
+
+/* ---------- Tabs ---------- */
+function showTab(name){
+  const shop=name==='shop';
+  $('tabBtnShop').classList.toggle('active',shop);$('tabBtnVault').classList.toggle('active',!shop);
+  $('tabBtnShop').setAttribute('aria-selected',String(shop));$('tabBtnVault').setAttribute('aria-selected',String(!shop));
+  $('tabShop').classList.toggle('hidden',!shop);$('tabVault').classList.toggle('hidden',shop);
+}
+$('tabBtnShop').onclick=()=>showTab('shop');
+$('tabBtnVault').onclick=()=>showTab('vault');
+function activateKey(el,fn){el.onclick=fn;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}}}
+activateKey($('backupBanner'),()=>showTab('vault'));
+
+/* ---------- Lưu trữ ---------- */
+function persist(){
+  try{localStorage.setItem(KEY,JSON.stringify(patients));return true}catch(e){return false}
+}
+// Thực hiện thay đổi + lưu; nếu lưu thất bại thì hoàn tác thay đổi trong bộ nhớ và báo lỗi
+function commit(mutate){
+  const snap=JSON.stringify(patients);
+  try{mutate()}catch(e){patients=JSON.parse(snap);return false}
+  if(persist())return true;
+  patients=JSON.parse(snap);
+  notify('Không lưu được vào bộ nhớ máy (đầy hoặc đang ở chế độ riêng tư). Thay đổi đã bị hủy — hãy sao lưu dữ liệu.',null,6500);
+  return false;
+}
+
+const normVisit=v=>({
+  id:String(v.id||'v_'+hash32([v.date||'',v.diagnosis??v.dx??'',v.treatment??v.tx??'',+v.cost||0,+v.profit||0].join('|'))),
+  diagnosis:String(v.diagnosis??v.dx??''),
+  treatment:String(v.treatment??v.tx??''),
+  date:isDate(v.date)?v.date:today(),
+  cost:Math.max(0,Number(v.cost)||0),
+  profit:Math.max(0,Number(v.profit)||0),
+  updatedAt:Number(v.updatedAt)||0
+});
+function normAge(a){
+  if(a===''||a==null)return '';
+  const n=Number(a);
+  return Number.isFinite(n)&&n>=0&&n<=130?n:'';
+}
+function normalize(p){
+  let visits=Array.isArray(p.visits)?p.visits.filter(v=>v&&typeof v==='object'):[];
+  if(!visits.length&&(p.diagnosis||p.dx||p.date||p.treatment||p.tx||p.cost)){
+    visits=[{diagnosis:p.diagnosis??p.dx??'',treatment:p.treatment??p.tx??'',date:p.date,cost:p.cost,profit:p.profit}];
+  }
+  const addr=p.address??p.addr??'';
+  return {
+    id:String(p.id||'p_'+hash32([p.name||'',p.phone||'',addr].join('|'))),
+    name:String(p.name||''),
+    age:normAge(p.age),
+    phone:String(p.phone||''),
+    address:String(addr),
+    updatedAt:Number(p.updatedAt)||0,
+    visits:visits.map(normVisit)
+  };
+}
+// Chuẩn hóa cả danh sách, đảm bảo id không trùng (id tạo theo nội dung nên nhập lại nhiều lần không sinh bản sao)
+function normalizeAll(arr){
+  const seenP=new Set();
+  return arr.filter(x=>x&&typeof x==='object').map(raw=>{
+    const p=normalize(raw);
+    let id=p.id,n=1;while(seenP.has(id))id=p.id+'_'+(++n);
+    p.id=id;seenP.add(id);
+    const seenV=new Set();
+    p.visits=p.visits.map(v=>{let vid=v.id,k=1;while(seenV.has(vid))vid=v.id+'_'+(++k);seenV.add(vid);return {...v,id:vid}});
+    return p;
+  });
+}
+
+function loadData(){
+  let raw=null;
+  try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+  try{
+    raw=ls.get(KEY);
+    if(raw){
+      const a=JSON.parse(raw);
+      if(Array.isArray(a)){patients=normalizeAll(a);return}
+      ls.set(CORRUPT_KEY,raw);patients=[];
+      notify('Dữ liệu lưu trên thiết bị có định dạng lạ. Bản gốc được giữ lại, hãy khôi phục từ file sao lưu.',null,6000);
+      return;
+    }
+    for(const k of LEGACY_KEYS){
+      const old=JSON.parse(ls.get(k)||'null');
+      if(Array.isArray(old)){
+        patients=normalizeAll(old);
+        if(persist())LEGACY_KEYS.forEach(k2=>ls.del(k2));
+        return;
+      }
+    }
+    patients=[];
+  }catch(e){
+    patients=[];
+    if(raw)ls.set(CORRUPT_KEY,raw);
+    notify('Không đọc được dữ liệu lưu trên thiết bị. Bản gốc được giữ lại, hãy khôi phục từ file sao lưu.',null,6000);
+  }
+}
+
+function latest(p){return [...(p.visits||[])].sort(cmpVisit)[0]||{}}
+function allVisits(){return patients.flatMap(p=>(p.visits||[]).map(v=>({...v,patientName:p.name,patientId:p.id})))}
+
+/* ---------- Điều hướng + nút Back của điện thoại ---------- */
+function setView(which,keep){
+  const was=view;view=which;
+  ['home','editor','detail'].forEach(v=>$(v).hidden=v!==which);
+  if(!keep)window.scrollTo(0,0);
+  if(was==='home'&&which!=='home'){try{history.pushState({v:which},'');pushed=true}catch(e){}}
+  else if(which==='home'&&pushed){pushed=false;ignorePop++;try{history.back()}catch(e){ignorePop--}}
+}
+const formSigNow=()=>['name','age','phone','address','diagnosis','treatment','date','cost','profit'].map(i=>$(i).value).join('\u0001');
+function appBack(){
+  if(view==='editor'){
+    if(formSigNow()!==formSig&&!confirm('Bỏ các thay đổi chưa lưu?'))return false;
+    if(activeId&&formMode!=='new'&&patients.some(p=>p.id===activeId))openDetail(activeId);else setView('home');
+    return true;
+  }
+  if(view==='detail'){setView('home');return true}
+  return false;
+}
+window.addEventListener('popstate',()=>{
+  if(ignorePop>0){ignorePop--;return}
+  pushed=false;
+  if(view==='home')return;
+  appBack();
+  if(view!=='home'){try{history.pushState({v:view},'');pushed=true}catch(e){}}
+});
+
+/* ---------- Render ---------- */
+function render(){
+  const q=fold($('search').value.trim()),qd=digitsOf($('search').value);
+  const now=today(),ym=now.slice(0,7),year=now.slice(0,4);
+  const vis=allVisits();
+  const month=vis.filter(v=>(v.date||'').startsWith(ym));
+  const yearVisits=vis.filter(v=>(v.date||'').startsWith(year));
+
+  const monthProfitSum=month.reduce((s,v)=>s+(+v.profit||0),0);
+  const yearCostSum=yearVisits.reduce((s,v)=>s+(+v.cost||0),0);
+  const yearProfitSum=yearVisits.reduce((s,v)=>s+(+v.profit||0),0);
+
+  $('total').textContent=patients.length;
+  $('monthVisits').textContent=month.length;
+  $('monthProfitHome').innerHTML=biscuit(monthProfitSum);
+  $('monthMoney').innerHTML=candy(month.reduce((s,v)=>s+(+v.cost||0),0));
+  $('yearMoney').innerHTML=candy(yearCostSum);
+  $('allMoney').innerHTML=candy(vis.reduce((s,v)=>s+(+v.cost||0),0));
+  $('monthProfit').innerHTML=biscuit(monthProfitSum);
+  $('yearProfit').innerHTML=biscuit(yearProfitSum);
+  $('allProfit').innerHTML=biscuit(vis.reduce((s,v)=>s+(+v.profit||0),0));
+  refreshBackupInfo();
+
+  const rows=patients.filter(p=>matchPatient(p,q,qd)).sort((a,b)=>(latest(b).date||'').localeCompare(latest(a).date||''));
+  $('shown').textContent=`${rows.length} dâu tây`;
+
+  if(!rows.length){
+    $('list').innerHTML=`<div class="empty"><b>${patients.length?'Không tìm thấy dâu tây':'Chưa có dâu tây nào'}</b>${patients.length?'Thử tìm bằng tên hoặc SĐT.':'Nhấn “Thêm mới” để đón chú mèo đầu tiên.'}</div>`;
+    return;
+  }
+
+  $('list').innerHTML=rows.map(p=>{
+    const v=latest(p);
+    return `<article class="patient" data-id="${esc(p.id)}" tabindex="0" role="button"><div class="avatar">${getCatAvatar(p.id)}</div><div class="pinfo"><div class="pname">${esc(p.name)}${p.age!==''?`, ${esc(p.age)} tuổi`:''}</div><div class="pmeta">${esc(v.diagnosis||'Chưa có nội dung')} · ${v.date?dateFmt(v.date):''} · ${(p.visits||[]).length} lượt</div></div><div class="pprice">${v.cost?candy(v.cost):''}</div><div class="arrow">${ic('chev-r')}</div></article>`;
+  }).join('');
+
+  $('list').querySelectorAll('.patient').forEach(el=>{
+    const go=()=>openDetail(el.dataset.id);
+    el.addEventListener('click',go);
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});
+  });
+}
+
+function openForm(mode='new',patientId=null,visitId=null){
+  formMode=mode;editingPatientId=patientId;editingVisitId=visitId;
+  const p=patients.find(x=>x.id===patientId)||{};
+  const v=visitId?(p.visits||[]).find(x=>x.id===visitId)||{}:{};
+  const visitOnly=mode==='visit'||mode==='visitEdit';
+  $('formTitle').textContent=mode==='new'?'Thêm dâu tây':mode==='visit'?'Thêm lượt ghé shop':mode==='visitEdit'?'Sửa lượt ghé':'Sửa thông tin';
+  $('identityFields').classList.toggle('hidden',visitOnly);
+  $('visitFields').classList.toggle('hidden',mode==='profile');
+  $('name').required=!visitOnly;
+  $('diagnosis').required=mode!=='profile';
+  $('name').value=p.name||'';
+  $('age').value=p.age??'';
+  $('phone').value=p.phone||'';
+  $('address').value=p.address||'';
+  $('diagnosis').value=v.diagnosis||'';
+  $('treatment').value=v.treatment||'';
+  $('date').value=v.date||today();
+  $('cost').value=fmtMoney(v.cost);
+  $('profit').value=fmtMoney(v.profit);
+  formSig=formSigNow();
+  setView('editor');
+}
+
+function openDetail(id,keep){
+  const p=patients.find(x=>x.id===id);if(!p)return;
+  activeId=id;
+  const field=(label,value,wide=false)=>`<div class="dfield ${wide?'wide':''}"><div class="dlabel">${label}</div><div class="dvalue">${value||'—'}</div></div>`;
+  const visits=[...(p.visits||[])].sort(cmpVisit);
+  const total=visits.reduce((s,v)=>s+(+v.cost||0),0);
+  const totalProfit=visits.reduce((s,v)=>s+(+v.profit||0),0);
+
+  $('detailContent').innerHTML=`
+    <div class="detail-head">
+      <div class="avatar">${getCatAvatar(p.id)}</div>
+      <div>
+        <div class="detail-name">${esc(p.name)}</div>
+        <div class="detail-sub">${p.age!==''?esc(p.age)+' tuổi · ':''}${visits.length} lượt ghé shop</div>
+      </div>
+    </div>
+    <div class="detailgrid">
+      ${field('Số điện thoại',esc(p.phone))}
+      ${field('Tuổi',p.age!==''?esc(p.age)+' tuổi':'')}
+      ${field('Địa chỉ',esc(p.address),true)}
+      ${field(ic('candy')+' Tổng Kẹo',candy(total),true)}
+      ${field(ic('cookie')+' Tổng Bánh quy',biscuit(totalProfit),true)}
+    </div>
+    <div class="profile-actions">
+      <button class="btn plain" id="editProfile" type="button">${ic('edit')} Sửa thông tin</button>
+      <button class="btn primary" id="newVisit" type="button">${ic('plus')} Thêm lượt ghé</button>
+    </div>
+    <div class="history">
+      <div class="section-title">Lịch sử ghé shop <span class="count">${visits.length} lượt</span></div>
+      ${visits.length?visits.map(v=>`
+        <article class="visit">
+          <div class="visit-top">
+            <div class="visit-date">${dateFmt(v.date)}</div>
+            <div style="text-align:right">
+              <div class="visit-cost">Kẹo: ${candy(v.cost)}</div>
+              <div class="visit-biscuit">Bánh quy: ${biscuit(v.profit)}</div>
+            </div>
+          </div>
+          <div class="visit-dx">${esc(v.diagnosis||'Chưa nhập nội dung')}</div>
+          <div class="visit-tx">${esc(v.treatment||'Chưa ghi chi tiết')}</div>
+          <div class="visit-tools"><button class="btn plain" type="button" data-edit-visit="${esc(v.id)}">${ic('edit')} Sửa</button><button class="btn danger" type="button" data-del-visit="${esc(v.id)}">${ic('trash')} Xóa</button></div>
+        </article>
+      `).join(''):'<div class="empty">Chưa có lượt ghé shop nào.</div>'}
+    </div>
+    <div class="actions">
+      <button class="btn plain" id="copyRecord" type="button">${ic('copy')} Sao chép</button>
+      <button class="btn danger" id="deleteRecord" type="button">${ic('trash')} Xóa hồ sơ</button>
+    </div>
+  `;
+
+  $('editProfile').onclick=()=>openForm('profile',id);
+  $('newVisit').onclick=()=>openForm('visit',id);
+  $('copyRecord').onclick=async()=>{
+    const s=[`Tên: ${p.name}`,`Tuổi: ${p.age!==''?p.age:'—'}`,`SĐT: ${p.phone||'—'}`,`Địa chỉ: ${p.address||'—'}`,`Tổng kẹo: ${num(total)}`,`Tổng bánh quy: ${num(totalProfit)}`].join('\n');
+    notify(await copyText(s)?'Đã sao chép':'Không sao chép được trên thiết bị này');
+  };
+  $('deleteRecord').onclick=()=>{
+    if(!confirm(`Xóa hồ sơ ${p.name}?`))return;
+    const idx=patients.findIndex(x=>x.id===id),removed=patients[idx];
+    if(!commit(()=>{patients=patients.filter(x=>x.id!==id)}))return;
+    render();setView('home');
+    notify('Đã xóa hồ sơ',{label:'Hoàn tác',fn:()=>{
+      if(commit(()=>{if(!patients.some(x=>x.id===id))patients.splice(Math.min(idx,patients.length),0,removed)})){render();notify('Đã khôi phục hồ sơ')}
+    }},8000);
+  };
+  $('detailContent').querySelectorAll('[data-edit-visit]').forEach(b=>b.onclick=()=>openForm('visitEdit',id,b.dataset.editVisit));
+  $('detailContent').querySelectorAll('[data-del-visit]').forEach(b=>{
+    b.onclick=()=>{
+      const vid=b.dataset.delVisit;
+      const cur=patients.find(x=>x.id===id);if(!cur)return;
+      const vi=cur.visits.findIndex(x=>x.id===vid);if(vi<0)return;
+      if(!confirm('Xóa lượt ghé này?'))return;
+      const removed=cur.visits[vi];
+      if(!commit(()=>{const q=patients.find(x=>x.id===id);q.visits=q.visits.filter(x=>x.id!==vid)}))return;
+      render();openDetail(id,true);
+      notify('Đã xóa lượt ghé',{label:'Hoàn tác',fn:()=>{
+        const ok=commit(()=>{const q=patients.find(x=>x.id===id);if(q&&!q.visits.some(x=>x.id===vid))q.visits.splice(Math.min(vi,q.visits.length),0,removed)});
+        if(ok){render();if(view==='detail'&&activeId===id)openDetail(id,true);notify('Đã khôi phục lượt ghé')}
+      }},8000);
+    };
+  });
+  setView('detail',keep);
+}
+
+$('patientForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const visitMode=formMode==='visit'||formMode==='visitEdit';
+  const readVisit=id=>({id,diagnosis:$('diagnosis').value.trim(),treatment:$('treatment').value.trim(),date:isDate($('date').value)?$('date').value:today(),cost:parseMoney($('cost').value),profit:parseMoney($('profit').value),updatedAt:Date.now()});
+  const age=$('age').value===''?'':Number($('age').value);
+
+  if(!visitMode&&!$('name').value.trim()){notify('Vui lòng nhập tên');$('name').focus();return}
+  if(!visitMode&&age!==''&&(!Number.isInteger(age)||age<0||age>130)){notify('Tuổi phải là số nguyên từ 0 đến 130');$('age').focus();return}
+  if(formMode!=='profile'&&!$('diagnosis').value.trim()){notify('Vui lòng nhập nội dung');$('diagnosis').focus();return}
+  if(formMode!=='new'&&!patients.some(x=>x.id===editingPatientId)){notify('Không tìm thấy hồ sơ');setView('home');render();return}
+
+  let resultId=editingPatientId;
+  const ok=commit(()=>{
+    const p=patients.find(x=>x.id===editingPatientId);
+    if(formMode==='new'){
+      const np={id:'p_'+rid(),name:$('name').value.trim(),age,phone:$('phone').value.trim(),address:$('address').value.trim(),updatedAt:Date.now(),visits:[readVisit('v_'+rid())]};
+      patients.unshift(np);resultId=np.id;
+    }else if(formMode==='profile'){
+      p.name=$('name').value.trim();p.age=age;p.phone=$('phone').value.trim();p.address=$('address').value.trim();p.updatedAt=Date.now();
+    }else if(formMode==='visitEdit'){
+      const i=p.visits.findIndex(x=>x.id===editingVisitId);
+      if(i<0)throw Error('missing');
+      p.visits[i]=readVisit(editingVisitId);
+    }else p.visits.unshift(readVisit('v_'+rid()));
+  });
+  if(!ok)return; // lưu thất bại: giữ nguyên form để không mất dữ liệu đang nhập
+
+  formSig=formSigNow();
+  render();
+  if(formMode==='new'){activeId=null;setView('home')}else openDetail(resultId);
+  notify('Đã lưu thành công');
+});
+
+/* ---------- Xuất / sao lưu ---------- */
+function download(name,content,type){
+  const blob=new Blob([content],{type});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1200);
+}
+
+const csvQ=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+const csvSafe=v=>{v=String(v??'');return /^[=+\-@\t\r]/.test(v)?"'"+v:v};
+const csvPhone=v=>{v=String(v??'').trim();if(!v)return '';return /^\+?[\d\s().-]+$/.test(v)?'="'+v+'"':csvSafe(v)};
+$('csv').onclick=()=>{
+  skipLock=Date.now()+60000;
+  const visits=allVisits();
+  if(!visits.length){notify('Chưa có dữ liệu để xuất');return}
+  const rows=visits.map(v=>{
+    const p=patients.find(x=>x.id===v.patientId)||{};
+    return [
+      csvSafe(v.patientName),
+      csvSafe(p.age!==undefined&&p.age!==''?p.age:''),
+      csvPhone(p.phone||''),
+      csvSafe(p.address||''),
+      csvSafe(v.diagnosis),
+      csvSafe(v.treatment),
+      v.date||'',
+      v.cost||0,
+      v.profit||0
+    ];
+  });
+  const cols=['Tên dâu tây','Tuổi','Số điện thoại','Địa chỉ','Nội dung','Chi tiết','Ngày ghé shop','Kẹo','Bánh quy'];
+
+  const annualCost={},annualProfit={},annualVisits={};
+  visits.forEach(v=>{
+    const y=String(v.date||'').slice(0,4);
+    if(/^\d{4}$/.test(y)){
+      annualVisits[y]=(annualVisits[y]||0)+1;
+      annualCost[y]=(annualCost[y]||0)+(Number(v.cost)||0);
+      annualProfit[y]=(annualProfit[y]||0)+(Number(v.profit)||0);
+    }
+  });
+  const years=Object.keys(annualVisits).sort();
+
+  const summary=[
+    [],
+    ['TỔNG LƯỢT GHÉ SHOP, KẸO & BÁNH QUY THEO NĂM DƯƠNG LỊCH'],
+    ['Năm','Tổng lượt ghé shop','Tổng Kẹo','Tổng Bánh quy'],
+    ...years.map(y=>[y, annualVisits[y]||0, annualCost[y]||0, annualProfit[y]||0])
+  ];
+
+  download('candy-shop-lich-su-va-thong-ke.csv','\ufeff'+[cols,...rows,...summary].map(r=>r.map(csvQ).join(',')).join('\r\n'),'text/csv;charset=utf-8');
+  notify('Đã xuất lịch sử ghé shop và tổng hợp theo năm');
+};
+
+async function backupData(){
+  skipLock=Date.now()+60000;
+  const filename=`sao-luu-candy-shop-${today()}.json`;
+  const content=JSON.stringify({format:'candy-shop-backup-v4',exportedAt:new Date().toISOString(),patients},null,2);
+  const blob=new Blob([content],{type:'application/json;charset=utf-8'});
+  try{
+    const file=new File([blob],filename,{type:'application/json'});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:'Sao lưu Candy Shop'});
+      markBackup();notify('Đã mở chia sẻ. Hãy chọn “Lưu vào Tệp”.');
+      return;
+    }
+  }catch(err){if(err&&err.name==='AbortError'){notify('Đã đóng bảng chia sẻ.');return;}}
+  const url=URL.createObjectURL(blob);
+  const old=$('backupPanel');if(old)old.remove();
+  const panel=document.createElement('section');panel.id='backupPanel';
+  panel.style.cssText='position:fixed;inset:0;z-index:50;background:rgba(74,37,51,.6);display:flex;align-items:flex-end;justify-content:center;padding:12px';
+  panel.innerHTML=`<div style="background:#fff;color:var(--ink);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:20px;padding:20px;width:100%;max-width:580px;max-height:85vh;overflow:auto"><div style="font-size:19px;font-weight:800;margin-bottom:7px">Lưu bản sao lưu</div><p style="font-size:13px;color:var(--muted);line-height:1.5">Tải file hoặc sao chép nội dung JSON dưới đây.</p><a id="backupDownload" class="btn primary" style="width:100%;text-decoration:none;margin:8px 0" download>${ic('download')} Tải file JSON</a><button id="backupCopy" type="button" class="btn plain" style="width:100%;margin:4px 0">${ic('copy')} Sao chép nội dung JSON</button><textarea id="backupText" readonly style="width:100%;height:110px;margin-top:8px;font-size:11px"></textarea><button id="backupClose" type="button" class="btn plain" style="width:100%;margin-top:8px">Đóng</button></div>`;
+  document.body.appendChild(panel);
+  const close=()=>{URL.revokeObjectURL(url);panel.remove()};
+  panel.addEventListener('click',e=>{if(e.target===panel)close()});
+  const a=$('backupDownload');a.href=url;a.download=filename;a.onclick=markBackup;
+  $('backupText').value=content;
+  $('backupCopy').onclick=async()=>{
+    if(await copyText(content)){markBackup();notify('Đã sao chép JSON.')}
+    else{const ta=$('backupText');ta.focus();ta.select();notify('Hãy giữ ngón tay để chọn và sao chép thủ công.')}
+  };
+  $('backupClose').onclick=close;
+  notify('Chọn “Tải file JSON” hoặc sao chép nội dung.');
+}
+
+$('backup').onclick=backupData;
+function markBackup(){ls.set(LAST_BK,String(Date.now()));refreshBackupInfo()}
+
+/* ---------- Khôi phục ---------- */
+$('restore').onclick=()=>{skipLock=Date.now()+120000;$('file').click()};
+function readPrev(){
+  try{const o=JSON.parse(ls.get(PREV_KEY)||'null');if(o&&Array.isArray(o.patients)&&Date.now()-o.t<7*864e5)return o}catch(e){}
+  ls.del(PREV_KEY);return null;
+}
+function refreshUndoRestore(){$('undoRestore').classList.toggle('hidden',!readPrev())}
+function askRestoreMode(n){
+  return new Promise(res=>{
+    const m=openModal(`<h3>Khôi phục ${n} hồ sơ</h3><p>Dữ liệu hiện tại sẽ được giữ một bản tạm 7 ngày để bạn hoàn tác.</p><button class="btn primary" id="rsMerge" type="button">Gộp vào dữ liệu hiện tại</button><button class="btn danger" id="rsReplace" type="button">Thay thế toàn bộ</button><button class="btn plain" id="rsCancel" type="button">Hủy</button>`);
+    const done=v=>{m.close();res(v)};
+    $('rsMerge').onclick=()=>done('merge');$('rsReplace').onclick=()=>done('replace');$('rsCancel').onclick=()=>done(null);
+    m.el.addEventListener('click',e=>{if(e.target===m.el)res(null)});
+  });
+}
+function mergePatients(incoming){
+  let addedP=0,addedV=0,updated=0;
+  incoming.forEach(ip=>{
+    const ex=patients.find(x=>x.id===ip.id);
+    if(!ex){patients.push(ip);addedP++;return}
+    if((ip.updatedAt||0)>(ex.updatedAt||0)){
+      ['name','age','phone','address'].forEach(k=>{ex[k]=ip[k]});ex.updatedAt=ip.updatedAt;updated++;
+    }else{
+      // bản hiện tại mới hơn/bằng: chỉ điền các ô còn trống
+      ['name','age','phone','address'].forEach(k=>{if((ex[k]===''||ex[k]==null)&&ip[k]!==''&&ip[k]!=null){ex[k]=ip[k];updated++}});
+    }
+    ip.visits.forEach(v=>{
+      const j=ex.visits.findIndex(x=>x.id===v.id);
+      if(j<0){ex.visits.push(v);addedV++}
+      else if((v.updatedAt||0)>(ex.visits[j].updatedAt||0)){ex.visits[j]=v;updated++}
+    });
+  });
+  return {addedP,addedV,updated};
+}
+$('file').onchange=async e=>{
+  const f=e.target.files&&e.target.files[0];
+  if(!f)return;
+  try{
+    const o=JSON.parse(await f.text());
+    const raw=Array.isArray(o)?o:(o&&o.patients);
+    if(!Array.isArray(raw))throw Error();
+    const incoming=normalizeAll(raw);
+    const mode=await askRestoreMode(incoming.length);
+    if(!mode)return;
+    const before=JSON.stringify(patients);
+    if(!ls.set(PREV_KEY,JSON.stringify({t:Date.now(),patients}))&&!confirm('Không tạo được bản tạm để hoàn tác. Vẫn tiếp tục?'))return;
+    let msg;
+    if(mode==='replace'){patients=incoming;msg=`Đã thay thế bằng ${patients.length} dâu tây`}
+    else{const r=mergePatients(incoming);msg=`Đã gộp: thêm ${r.addedP} dâu tây, ${r.addedV} lượt ghé, cập nhật ${r.updated} mục`}
+    if(persist()){render();refreshUndoRestore();notify(msg)}
+    else{patients=JSON.parse(before);ls.del(PREV_KEY);refreshUndoRestore();render();notify('Không lưu được vào bộ nhớ máy. Dữ liệu hiện tại được giữ nguyên.',null,5000)}
+  }catch(err){notify('Không thể khôi phục: file không hợp lệ.')}finally{e.target.value=''}
+};
+$('undoRestore').onclick=()=>{
+  const o=readPrev();if(!o){refreshUndoRestore();return}
+  if(!confirm('Hoàn tác lần khôi phục gần nhất? Dữ liệu hiện tại sẽ được thay bằng bản trước khi khôi phục.'))return;
+  const cur=patients;patients=normalizeAll(o.patients);
+  if(persist()){ls.del(PREV_KEY);render();refreshUndoRestore();notify('Đã hoàn tác khôi phục')}
+  else{patients=cur;notify('Không lưu được vào bộ nhớ máy. Chưa hoàn tác.')}
+};
+
+/* ---------- PIN modal ---------- */
+$('setPinBtn').onclick=()=>{
+  const has=!!ls.get(PIN_KEY);
+  const m=openModal(`<h3>${has?'Đổi / gỡ mã PIN':'Tạo mã PIN'}</h3><p>PIN chỉ khóa giao diện ứng dụng và tự khóa khi bạn chuyển sang app khác. Dữ liệu trong bộ nhớ máy không được mã hóa.</p><input id="pinNew" type="password" inputmode="numeric" autocomplete="off" placeholder="Nhập PIN 4-6 số" maxlength="6"><div class="err" id="pinErr"></div><button class="btn primary" id="pinSave" type="button">Lưu PIN</button>${has?'<button class="btn danger" id="pinRemove" type="button">Gỡ PIN</button>':''}<button class="btn plain" id="pinCancel" type="button">Hủy</button>`);
+  $('pinCancel').onclick=m.close;
+  $('pinSave').onclick=()=>{
+    const v=$('pinNew').value.trim();
+    if(/^\d{4,6}$/.test(v)){ls.set(PIN_KEY,hashPin(v));setFail(0,0);m.close();refreshPinUI();notify('Đã lưu PIN')}
+    else $('pinErr').textContent='PIN phải gồm 4 đến 6 chữ số.';
+  };
+  if(has)$('pinRemove').onclick=()=>{ls.del(PIN_KEY);setFail(0,0);m.close();refreshPinUI();notify('Đã gỡ PIN')};
+};
+
+/* ---------- Sao lưu nhắc nhở + gợi ý Thêm vào Màn hình chính ---------- */
+function refreshBackupInfo(){
+  const t=Number(ls.get(LAST_BK))||0,days=t?Math.floor((Date.now()-t)/864e5):null;
+  $('backupInfo').textContent=t?`Sao lưu lần cuối: ${new Date(t).toLocaleDateString('vi-VN')} (${days===0?'hôm nay':days+' ngày trước'}).`:'Bạn chưa sao lưu lần nào.';
+  const need=patients.length>0&&(!t||days>=30),b=$('backupBanner');
+  b.classList.toggle('hidden',!need);
+  if(need)b.innerHTML=ic('alert')+'<span>'+(t?`Đã ${days} ngày chưa sao lưu. Bấm để sao lưu ngay.`:'Bạn chưa sao lưu dữ liệu. Bấm để sao lưu ngay.')+'</span>';
+}
+function setupA2HS(){
+  const standalone=window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  if(standalone||!isIOS||ls.get(A2HS_KEY))return;
+  const b=$('a2hsBanner');
+  b.innerHTML=ic('alert')+'<span>Safari có thể xóa dữ liệu nếu bạn không mở app trong 7 ngày. Bấm để xem cách “Thêm vào Màn hình chính”.</span>';
+  b.classList.remove('hidden');
+  activateKey(b,()=>{
+    const m=openModal(`<h3>Thêm vào Màn hình chính</h3><ol><li>Mở trang này bằng Safari, bấm nút Chia sẻ (ô vuông có mũi tên).</li><li>Chọn “Thêm vào Màn hình chính”.</li><li>Mở app từ biểu tượng mới.</li></ol><p><b>Lưu ý:</b> app trên Màn hình chính có kho dữ liệu riêng, không tự lấy dữ liệu từ Safari. Hãy bấm <b>Sao lưu</b> trước, rồi <b>Khôi phục</b> trong app mới.</p><button class="btn primary" id="a2hsOk" type="button">Đã hiểu</button><button class="btn plain" id="a2hsLater" type="button">Nhắc lại sau</button>`);
+    $('a2hsOk').onclick=()=>{ls.set(A2HS_KEY,'1');b.classList.add('hidden');m.close()};
+    $('a2hsLater').onclick=m.close;
+  });
+}
+
+/* ---------- Ô tiền: giữ vị trí con trỏ khi sửa giữa chuỗi ---------- */
+['cost','profit'].forEach(id=>{
+  const el=$(id);
+  el.addEventListener('input',()=>{
+    const pos=el.selectionStart==null?el.value.length:el.selectionStart;
+    const before=el.value.slice(0,pos).replace(/\D/g,'').length;
+    const f=dots(digitsOf(el.value).replace(/^0+(?=\d)/,'').slice(0,12));
+    el.value=f;
+    let np=f.length;
+    if(before===0)np=0;
+    else{let c=0;for(let i=0;i<f.length;i++){if(/\d/.test(f[i])){c++;if(c===before){np=i+1;break}}}}
+    try{el.setSelectionRange(np,np)}catch(e){}
+  });
+});
+
+$('add').onclick=()=>{activeId=null;openForm('new')};
+$('cancel').onclick=$('discard').onclick=()=>{appBack()};
+$('detailBack').onclick=()=>{appBack()};
+$('search').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(render,150)});
+
+loadData();render();refreshPinUI();refreshUndoRestore();setupA2HS();
+})();
+</script>
+</body>
+</html>
